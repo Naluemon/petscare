@@ -1,5 +1,6 @@
 // screens/login_screen.dart
 import 'package:flutter/material.dart';
+import 'package:petscare/main.dart';
 import 'package:petscare/screens/home_page.dart';
 import 'package:petscare/screens/sign_up_screen.dart';
 
@@ -20,8 +21,8 @@ class LoginScreen extends StatelessWidget {
               Text(
                 'Pets Care',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.brown[700],
+                style: const TextStyle(
+                  color: Colors.brown,
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
@@ -37,8 +38,8 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(height: 30),
               Text(
                 'Login to your Account',
-                style: TextStyle(
-                  color: Colors.brown[700],
+                style: const TextStyle(
+                  color: Colors.brown,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -84,12 +85,11 @@ class LoginScreen extends StatelessWidget {
                   const Text(
                     "Don't have an Account?",
                     style: TextStyle(
-                      color: Colors.black87,
+                      color: Colors.brown,
                     ),
                   ),
                   TextButton(
                     onPressed: () {
-                      // นำทางไปยังหน้าลงทะเบียน
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -101,7 +101,7 @@ class LoginScreen extends StatelessWidget {
                     child: const Text(
                       "Sign up",
                       style: TextStyle(
-                        color: Colors.black87,
+                        color: Colors.brown,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -112,12 +112,11 @@ class LoginScreen extends StatelessWidget {
               // Login button
               ElevatedButton(
                 onPressed: () {
-                  // ลอจิกการเข้าสู่ระบบที่นี่
+                  // ✅ แก้ไขให้ไปที่ MainScreen แทน HomePage
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          const HomePage(), // หลังจากล็อกอินสำเร็จ ไปที่หน้า HomePage
+                      builder: (context) => const MainScreen(),
                     ),
                   );
                 },
@@ -131,7 +130,7 @@ class LoginScreen extends StatelessWidget {
                 child: const Text(
                   'Login',
                   style: TextStyle(
-                    color: Colors.black87,
+                    color: Colors.brown,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),

@@ -1,6 +1,6 @@
 // screens/home_page.dart
 import 'package:flutter/material.dart';
-import 'package:petscare/widgets/bottom_nav_bar.dart'; // Import BottomNavBar
+import 'package:petscare/screens/pet_info_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,31 +10,144 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0; // Track the current tab index
+  List<Map<String, dynamic>> pets = [];
 
-  // Define the pages for each tab
-  final List<Widget> _pages = [
-    const Center(child: Text("Home Page")), // Home Tab
-    const Center(child: Text("Book Service Page")), // Book Service Tab
-    const Center(child: Text("Health Log Page")), // Health Log Tab
-    const Center(child: Text("Knowledge Page")), // Knowledge Tab
-    const Center(child: Text("Profile Page")), // Profile Tab
-  ];
+  @override
+  void initState() {
+    super.initState();
+    pets = [
+      {'name': 'Milo', 'type': 'Dog', 'image': 'assets/images/dog02.jpg'},
+      {'name': 'Whiskers', 'type': 'Cat', 'image': 'assets/images/cat02.jpg'},
+      {'name': 'Nemo', 'type': 'Fish', 'image': 'assets/images/fish.jpg'},
+    ];
+  }
 
-  void _onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index; // Update current index
-    });
+  void _confirmDeletePet(int index) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Delete Pet"),
+        content: const Text("Are you sure you want to delete this pet?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                pets.removeAt(index);
+              });
+              Navigator.pop(context);
+            },
+            child: const Text("Delete", style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPetGridPage() {
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          color: Colors.yellow,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          alignment: Alignment.center,
+          child: const Text(
+            'Pets',
+            style: TextStyle(
+                fontSize: 22, fontWeight: FontWeight.bold, color: Colors.brown),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: pets.isEmpty
+                ? const Center(
+                    child: Text(
+                      "ยังไม่มีสัตว์เลี้ยง",
+                      style: TextStyle(fontSize: 18, color: Colors.grey),
+                    ),
+                  )
+                : GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 1.0,
+                    ),
+                    itemCount: pets.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onLongPress: () => _confirmDeletePet(index),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  image: DecorationImage(
+                                    image: AssetImage(pets[index]['image']),
+                                    fit: BoxFit.cover, // ✅ ปรับให้ภาพเต็มกรอบ
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              pets[index]['name'],
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.brown),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF8B5A2B),
+              minimumSize: const Size(double.infinity, 50),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+            ),
+            onPressed: () async {
+              final newPet = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const PetInfoScreen()),
+              );
+
+              if (newPet != null && mounted) {
+                setState(() {
+                  pets.add(newPet);
+                });
+              }
+            },
+            child: const Text('Add more pet',
+                style: TextStyle(fontSize: 16, color: Colors.white)),
+          ),
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: _pages[_currentIndex], // Display the selected page
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: _currentIndex, // Pass the current index to BottomNavBar
-        onTabTapped: _onTabTapped, // Pass the onTap function
+      body: SafeArea(
+        child: _buildPetGridPage(),
       ),
     );
   }

@@ -2,8 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:petscare/screens/healthlog_screen.dart';
 import 'package:petscare/screens/knowledge_screen.dart';
-import 'package:petscare/screens/proflie_page.dart';
-import 'package:petscare/widgets/bottom_nav_bar.dart';
+import 'package:petscare/screens/profile_page.dart';
 import 'package:petscare/screens/home_page.dart';
 import 'package:petscare/screens/bookservice_page.dart';
 
@@ -23,14 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
     const BookservicePage(),
     const HealthlogScreen(),
     const KnowledgeScreen(),
-    const ProfilePage(),
+    ProfilePage(),
   ];
-
-  void _onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
       body: IndexedStack(
         index: _currentIndex,
         children: _pages,
-      ),
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: _currentIndex,
-        onTabTapped: _onTabTapped,
       ),
     );
   }
