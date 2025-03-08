@@ -15,20 +15,34 @@ class StartScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/your_image.png', // ระบุที่อยู่ของไฟล์ภาพในโฟลเดอร์ assets
-              width: 100, // ขนาดความกว้างของภาพ
-              height: 100, // ขนาดความสูงของภาพ
+              'assets/images/logo.png',
+              width: 350, // ขนาดความกว้างของภาพ
+              height: 450, // ขนาดความสูงของภาพ
             ),
-            const SizedBox(height: 20),
-            const Text(
-              'PetsCare',
-              style: TextStyle(
-                fontSize: 30,
-                color: Color.fromARGB(255, 119, 64, 0),
-                fontWeight: FontWeight.bold,
-              ),
+            const SizedBox(height: 20), // ระยะห่างระหว่างภาพและข้อความ
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Text(
+                  'Pets',
+                  style: TextStyle(
+                    fontSize: 40,
+                    color: Color.fromARGB(255, 119, 64, 0),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(width: 10), // ระยะห่างระหว่างคำ
+                Text(
+                  'Care',
+                  style: TextStyle(
+                    fontSize: 40,
+                    color: Color.fromARGB(255, 119, 64, 0),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 20), // ระยะห่างระหว่างข้อความและปุ่ม
             ElevatedButton(
               onPressed: () {
                 // เมื่อกดปุ่มจะพาไปที่หน้า Login
@@ -43,7 +57,7 @@ class StartScreen extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
                 textStyle: const TextStyle(
-                  fontSize: 18,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               ),

@@ -1,10 +1,10 @@
-// screens/login_screen.dart
+// screens/sign_up_screen.dart
+// screens/signup_screen.dart
 import 'package:flutter/material.dart';
-import 'package:petscare/screens/home_page.dart';
-import 'package:petscare/screens/sign_up_screen.dart';
+import 'login_screen.dart'; // นำเข้า login screen
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class SignUpScreen extends StatelessWidget {
+  const SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class LoginScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 40),
               Text(
-                'Pets Care',
+                'Register',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.brown[700],
@@ -27,16 +27,8 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              Center(
-                child: Image.asset(
-                  'assets/images/login.png',
-                  height: 150,
-                  width: 150,
-                ),
-              ),
-              const SizedBox(height: 30),
               Text(
-                'Login to your Account',
+                'Create a New Account',
                 style: TextStyle(
                   color: Colors.brown[700],
                   fontSize: 18,
@@ -44,7 +36,23 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              // Email field
+              // ช่องกรอกชื่อ
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: const TextField(
+                  decoration: InputDecoration(
+                    hintText: 'FullName',
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              // ช่องกรอกอีเมล
               Container(
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
@@ -60,7 +68,7 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              // Password field
+              // ช่องกรอกรหัสผ่าน
               Container(
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
@@ -76,48 +84,33 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 15),
-              // Don't have an account row
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "Don't have an Account?",
-                    style: TextStyle(
-                      color: Colors.black87,
-                    ),
+              const SizedBox(height: 10),
+              // ช่องยืนยันรหัสผ่าน
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: const TextField(
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    hintText: 'Confirm Password',
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    border: InputBorder.none,
                   ),
-                  TextButton(
-                    onPressed: () {
-                      // นำทางไปยังหน้าลงทะเบียน
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const SignUpScreen(), // ไปที่หน้าลงทะเบียน
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      "Sign up",
-                      style: TextStyle(
-                        color: Colors.black87,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
               const SizedBox(height: 20),
-              // Login button
+              // ปุ่มลงทะเบียน
               ElevatedButton(
                 onPressed: () {
-                  // ลอจิกการเข้าสู่ระบบที่นี่
+                  // ลอจิกการสมัครสมาชิกที่นี่
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          const HomePage(), // หลังจากล็อกอินสำเร็จ ไปที่หน้า HomePage
+                          const LoginScreen(), // ไปที่หน้าล็อกอินหลังจากสมัครสมาชิก
                     ),
                   );
                 },
@@ -129,7 +122,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 child: const Text(
-                  'Login',
+                  'Register',
                   style: TextStyle(
                     color: Colors.black87,
                     fontSize: 16,

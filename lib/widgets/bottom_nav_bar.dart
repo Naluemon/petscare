@@ -17,10 +17,10 @@ class BottomNavBar extends StatelessWidget {
       currentIndex: currentIndex,
       onTap: onTabTapped,
       selectedItemColor:
-          const Color.fromARGB(255, 70, 38, 0), // สีของไอคอนที่เลือก
-      unselectedItemColor: Colors.white, // สีของไอคอนที่ไม่ได้เลือก
+          const Color.fromARGB(255, 70, 38, 0), // Color of the selected icon
+      unselectedItemColor: Colors.white, // Color of unselected icons
       backgroundColor:
-          const Color.fromARGB(255, 191, 124, 0), // สีที่ไม่โปร่งแสง
+          const Color.fromARGB(255, 255, 192, 0), // Darker yellow background
       elevation: 10,
       items: const [
         BottomNavigationBarItem(
