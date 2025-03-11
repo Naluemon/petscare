@@ -1,6 +1,6 @@
 // screens/sign_up_screen.dart
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // ⭐ เพิ่ม SharedPreferences
+import 'package:shared_preferences/shared_preferences.dart';
 import 'login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -17,7 +17,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
+  bool _isLoading = false; //  ป้องกันการกดปุ่มซ้ำ
+
   Future<void> _register() async {
+    if (_isLoading) return; // กันการกดซ้ำ
+
+    setState(() => _isLoading = true);
+
     String name = _nameController.text.trim();
     String email = _emailController.text.trim();
     String password = _passwordController.text.trim();
@@ -27,27 +33,46 @@ class _SignUpScreenState extends State<SignUpScreen> {
         email.isEmpty ||
         password.isEmpty ||
         confirmPassword.isEmpty) {
-      _showErrorDialog("กรุณากรอกข้อมูลให้ครบทุกช่อง");
+      _showErrorDialog("Please fill in all fields.");
+      setState(() => _isLoading = false);
       return;
     }
 
     if (password != confirmPassword) {
-      _showErrorDialog("รหัสผ่านไม่ตรงกัน");
+      _showErrorDialog("Passwords do not match");
+      setState(() => _isLoading = false);
       return;
     }
 
-    // ⭐ บันทึกข้อมูลลง SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('name', name);
     await prefs.setString('email', email);
-    await prefs.setString('password',
-        password); // **เก็บรหัสผ่านแบบง่ายๆ (ไม่แนะนำสำหรับแอปจริง)**
+    await prefs.setString('password', password);
 
-    // สมัครเสร็จแล้วไปที่หน้า Login
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
-    );
+    // ✅ แสดง Alert แจ้งว่าสมัครสำเร็จ
+    _showSuccessDialog();
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Success"),
+        content: const Text("Registration successful!"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // ปิด AlertDialog
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+              );
+            },
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    ).then((_) => setState(() => _isLoading = false)); // เปิดใช้งานปุ่มอีกครั้ง
   }
 
   void _showErrorDialog(String message) {
@@ -63,7 +88,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ],
       ),
-    );
+    ).then((_) => setState(() => _isLoading = false)); // เปิดใช้งานปุ่มอีกครั้ง
   }
 
   @override
@@ -96,32 +121,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-
-              // ช่องกรอกชื่อ
               _buildTextField(controller: _nameController, hint: "Full Name"),
               const SizedBox(height: 10),
-
-              // ช่องกรอกอีเมล
               _buildTextField(controller: _emailController, hint: "Email"),
               const SizedBox(height: 10),
-
-              // ช่องกรอกรหัสผ่าน
               _buildTextField(
                   controller: _passwordController,
                   hint: "Password",
                   isPassword: true),
               const SizedBox(height: 10),
-
-              // ช่องยืนยันรหัสผ่าน
               _buildTextField(
                   controller: _confirmPasswordController,
                   hint: "Confirm Password",
                   isPassword: true),
               const SizedBox(height: 20),
-
-              // ปุ่มลงทะเบียน
               ElevatedButton(
-                onPressed: _register,
+                onPressed: _isLoading ? null : _register, // ปิดปุ่มขณะโหลด
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.yellow,
                   padding: const EdgeInsets.symmetric(vertical: 16),
@@ -129,14 +144,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: const Text(
-                  'Register',
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                child: _isLoading
+                    ? const CircularProgressIndicator(
+                        color: Colors.brown) // แสดง Loading
+                    : const Text(
+                        'Register',
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
               ),
             ],
           ),

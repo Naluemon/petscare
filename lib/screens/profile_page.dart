@@ -1,6 +1,6 @@
 // screens/profile_page.dart
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // 📌 ใช้ SharedPreferences
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:petscare/screens/start_screen.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -18,10 +18,10 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    _loadUserData(); // 📌 โหลดข้อมูลเมื่อหน้า Profile ถูกสร้าง
+    _loadUserData();
   }
 
-  // ✅ โหลดข้อมูลผู้ใช้จาก SharedPreferences
+  //  โหลดข้อมูลผู้ใช้จาก SharedPreferences
   Future<void> _loadUserData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -29,6 +29,72 @@ class _ProfilePageState extends State<ProfilePage> {
       _email = prefs.getString('user_email') ?? "johndoe@email.com";
       _phone = prefs.getString('user_phone') ?? "081-234-5678";
     });
+  }
+
+  //  ฟังก์ชันแก้ไขข้อมูลโปรไฟล์
+  Future<void> _editProfileDialog() async {
+    TextEditingController nameController = TextEditingController(text: _name);
+    TextEditingController emailController = TextEditingController(text: _email);
+    TextEditingController phoneController = TextEditingController(text: _phone);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Edit Profile"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(labelText: "Full Name"),
+            ),
+            TextField(
+              controller: emailController,
+              decoration: const InputDecoration(labelText: "Email"),
+            ),
+            TextField(
+              controller: phoneController,
+              decoration: const InputDecoration(labelText: "Phone Number"),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.setString('user_name', nameController.text.trim());
+              await prefs.setString('user_email', emailController.text.trim());
+              await prefs.setString('user_phone', phoneController.text.trim());
+
+              setState(() {
+                _name = nameController.text.trim();
+                _email = emailController.text.trim();
+                _phone = phoneController.text.trim();
+              });
+
+              Navigator.pop(context); // ปิด Dialog
+            },
+            child: const Text("Save"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  //  ฟังก์ชันออกจากระบบ
+  Future<void> _logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear(); // ล้างข้อมูล
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const StartScreen()),
+      (Route<dynamic> route) => false,
+    );
   }
 
   @override
@@ -51,7 +117,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 12),
 
-            // 🔥 ข้อมูลผู้ใช้จาก SharedPreferences
+            //  ข้อมูลผู้ใช้จาก SharedPreferences
             Text(
               _name,
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -70,10 +136,9 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 20),
 
+            //  ปุ่มแก้ไขข้อมูล
             ElevatedButton.icon(
-              onPressed: () {
-                // TODO: เพิ่มฟังก์ชันแก้ไขโปรไฟล์
-              },
+              onPressed: _editProfileDialog,
               icon: const Icon(Icons.edit, color: Colors.white),
               label: const Text('Edit Profile'),
               style: ElevatedButton.styleFrom(
@@ -84,6 +149,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 20),
 
+            //  ปุ่ม Logout
             TextButton(
               onPressed: () {
                 _logout(context);
@@ -96,17 +162,6 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
       ),
-    );
-  }
-
-  void _logout(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear(); //  ล้างข้อมูลผู้ใช้เมื่อออกจากระบบ
-
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const StartScreen()),
-      (Route<dynamic> route) => false,
     );
   }
 }
