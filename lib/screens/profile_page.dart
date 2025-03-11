@@ -1,7 +1,10 @@
 // screens/profile_page.dart
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:petscare/screens/start_screen.dart';
+import 'package:image_picker/image_picker.dart'; // ต้องเพิ่ม dependency นี้
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -13,7 +16,9 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   String _name = "Loading...";
   String _email = "Loading...";
-  String _phone = "Loading...";
+  String _password = "••••••••";
+  String? _imageBase64; // เพิ่มตัวแปรเก็บรูปภาพในรูปแบบ Base64
+  final ImagePicker _picker = ImagePicker(); // ตัวแปรสำหรับเลือกรูปภาพ
 
   @override
   void initState() {
@@ -21,21 +26,81 @@ class _ProfilePageState extends State<ProfilePage> {
     _loadUserData();
   }
 
-  //  โหลดข้อมูลผู้ใช้จาก SharedPreferences
+  // โหลดข้อมูลผู้ใช้จาก SharedPreferences
   Future<void> _loadUserData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _name = prefs.getString('user_name') ?? "John Doe";
-      _email = prefs.getString('user_email') ?? "johndoe@email.com";
-      _phone = prefs.getString('user_phone') ?? "081-234-5678";
+      _name = prefs.getString('user_name') ?? "PetOwner";
+      _email = prefs.getString('user_email') ?? "t@gmail.com";
+      _imageBase64 = prefs.getString('user_image');
     });
   }
 
-  //  ฟังก์ชันแก้ไขข้อมูลโปรไฟล์
+  // ฟังก์ชันเลือกรูปภาพจากแกลเลอรี่หรือกล้อง
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(
+        source: source,
+        maxWidth: 800, // ลดขนาดรูปภาพเพื่อประหยัดพื้นที่
+        maxHeight: 800,
+        imageQuality: 85, // คุณภาพของรูปภาพ 0-100
+      );
+
+      if (pickedFile != null) {
+        // แปลงรูปภาพเป็น Base64 เพื่อเก็บใน SharedPreferences
+        final bytes = await File(pickedFile.path).readAsBytes();
+        final base64Image = base64Encode(bytes);
+
+        // บันทึกลงใน SharedPreferences
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('user_image', base64Image);
+
+        setState(() {
+          _imageBase64 = base64Image;
+        });
+      }
+    } catch (e) {
+      // แสดงข้อความเมื่อเกิดข้อผิดพลาด
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('เกิดข้อผิดพลาด: $e')),
+      );
+    }
+  }
+
+  // แสดงตัวเลือกแหล่งที่มาของรูปภาพ (กล้องหรือแกลเลอรี่)
+  void _showImageSourceOptions() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_camera),
+              title: const Text('ถ่ายรูปใหม่'),
+              onTap: () {
+                Navigator.of(context).pop();
+                _pickImage(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('เลือกรูปจากแกลเลอรี่'),
+              onTap: () {
+                Navigator.of(context).pop();
+                _pickImage(ImageSource.gallery);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ฟังก์ชันแก้ไขข้อมูลโปรไฟล์
   Future<void> _editProfileDialog() async {
     TextEditingController nameController = TextEditingController(text: _name);
     TextEditingController emailController = TextEditingController(text: _email);
-    TextEditingController phoneController = TextEditingController(text: _phone);
+    TextEditingController passwordController = TextEditingController(text: "");
 
     showDialog(
       context: context,
@@ -53,8 +118,9 @@ class _ProfilePageState extends State<ProfilePage> {
               decoration: const InputDecoration(labelText: "Email"),
             ),
             TextField(
-              controller: phoneController,
-              decoration: const InputDecoration(labelText: "Phone Number"),
+              controller: passwordController,
+              decoration: const InputDecoration(labelText: "Password"),
+              obscureText: true,
             ),
           ],
         ),
@@ -68,12 +134,14 @@ class _ProfilePageState extends State<ProfilePage> {
               final prefs = await SharedPreferences.getInstance();
               await prefs.setString('user_name', nameController.text.trim());
               await prefs.setString('user_email', emailController.text.trim());
-              await prefs.setString('user_phone', phoneController.text.trim());
+              if (passwordController.text.trim().isNotEmpty) {
+                await prefs.setString(
+                    'user_password', passwordController.text.trim());
+              }
 
               setState(() {
                 _name = nameController.text.trim();
                 _email = emailController.text.trim();
-                _phone = phoneController.text.trim();
               });
 
               Navigator.pop(context); // ปิด Dialog
@@ -85,11 +153,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  //  ฟังก์ชันออกจากระบบ
+  // ฟังก์ชันออกจากระบบ
   Future<void> _logout(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear(); // ล้างข้อมูล
-
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => const StartScreen()),
@@ -101,62 +166,171 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Profile'),
+        title: const Text('Profile',
+            style: TextStyle(color: Colors.brown, fontWeight: FontWeight.bold)),
         centerTitle: true,
-        backgroundColor: Colors.yellow,
+        backgroundColor: Colors.white,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const CircleAvatar(
-              radius: 60,
-              backgroundImage:
-                  AssetImage('assets/images/profile.jpg'), // เปลี่ยนเป็นรูปจริง
-            ),
-            const SizedBox(height: 12),
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  // Profile image with upload option
+                  Stack(
+                    children: [
+                      // รูปโปรไฟล์
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(8),
+                          image: _imageBase64 != null
+                              ? DecorationImage(
+                                  image: MemoryImage(
+                                    base64Decode(_imageBase64!),
+                                  ),
+                                  fit: BoxFit.cover,
+                                )
+                              : null,
+                        ),
+                        child: _imageBase64 == null
+                            ? const Center(
+                                child: Icon(
+                                  Icons.person,
+                                  size: 50,
+                                  color: Colors.grey,
+                                ),
+                              )
+                            : null,
+                      ),
+                      // ปุ่มอัพโหลดรูป
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: GestureDetector(
+                          onTap: _showImageSourceOptions,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
+                              color: Colors.yellow,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.camera_alt,
+                              color: Colors.brown,
+                              size: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
 
-            //  ข้อมูลผู้ใช้จาก SharedPreferences
-            Text(
-              _name,
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 6),
+                  // Name field
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Name', style: TextStyle(fontSize: 14)),
+                      const SizedBox(height: 4),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(_name),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
 
-            Text(
-              _email,
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-            const SizedBox(height: 6),
+                  // Email field
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Email', style: TextStyle(fontSize: 14)),
+                      const SizedBox(height: 4),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(_email),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
 
-            Text(
-              'Phone: $_phone',
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-            const SizedBox(height: 20),
+                  // Password field
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Password', style: TextStyle(fontSize: 14)),
+                      const SizedBox(height: 4),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(_password),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
 
-            //  ปุ่มแก้ไขข้อมูล
-            ElevatedButton.icon(
-              onPressed: _editProfileDialog,
-              icon: const Icon(Icons.edit, color: Colors.white),
-              label: const Text('Edit Profile'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.brown,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-              ),
-            ),
-            const SizedBox(height: 20),
+                  // Edit Profile button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: _editProfileDialog,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.yellow,
+                        foregroundColor: Colors.brown,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Text('Edit Profile',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
 
-            //  ปุ่ม Logout
-            TextButton(
-              onPressed: () {
-                _logout(context);
-              },
-              child: const Text(
-                'Logout',
-                style: TextStyle(color: Colors.red, fontSize: 16),
+                  // Log out button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () => _logout(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Text('Log out',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

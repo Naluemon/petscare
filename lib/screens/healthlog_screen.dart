@@ -15,8 +15,12 @@ class HealthlogScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pet Health '),
+        title: const Text(
+          'Pet Health',
+          style: TextStyle(fontSize: 24), // ปรับขนาดตัวอักษร
+        ),
         backgroundColor: Colors.yellow,
+        foregroundColor: Colors.brown,
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(10),

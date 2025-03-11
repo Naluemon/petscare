@@ -13,33 +13,59 @@ class BottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: currentIndex,
-      onTap: onTap,
-      selectedItemColor: Colors.brown,
-      unselectedItemColor: Colors.grey,
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.book),
-          label: 'Services',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.pets),
-          label: 'Health Log',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.lightbulb),
-          label: 'Knowledge',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
-        ),
-      ],
+    return Container(
+      height: 60,
+      color: Colors.yellow,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          IconButton(
+            icon: Icon(
+              Icons.home,
+              color: currentIndex == 0
+                  ? Colors.brown
+                  : Colors.brown.withOpacity(0.5),
+            ),
+            onPressed: () => onTap(0),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.article,
+              color: currentIndex == 1
+                  ? Colors.brown
+                  : Colors.brown.withOpacity(0.5),
+            ),
+            onPressed: () => onTap(1),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.pets,
+              color: currentIndex == 2
+                  ? Colors.brown
+                  : Colors.brown.withOpacity(0.5),
+            ),
+            onPressed: () => onTap(2),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.lightbulb,
+              color: currentIndex == 3
+                  ? Colors.brown
+                  : Colors.brown.withOpacity(0.5),
+            ),
+            onPressed: () => onTap(3),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.person,
+              color: currentIndex == 4
+                  ? Colors.brown
+                  : Colors.brown.withOpacity(0.5),
+            ),
+            onPressed: () => onTap(4),
+          ),
+        ],
+      ),
     );
   }
 }
