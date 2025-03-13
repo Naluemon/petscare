@@ -1,6 +1,6 @@
 // screens/bookservice_page.dart
 import 'package:flutter/material.dart';
-import 'package:petscare/screens/%E0%B8%B4booking_history_screen.dart';
+import 'package:petscare/screens/%E0%B8%B4booking_history_screen.dart'; //ประวัติการจอง
 import 'booking_screen.dart'; // หน้าจอง
 
 class BookservicePage extends StatelessWidget {
@@ -37,7 +37,8 @@ class BookservicePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Book Service',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.brown),
+          style: TextStyle(
+              fontSize: 24, fontWeight: FontWeight.bold, color: Colors.brown),
         ),
         centerTitle: true,
         backgroundColor: Colors.yellow,
@@ -97,8 +98,9 @@ class BookservicePage extends StatelessWidget {
                         Text(
                           service['title']!,
                           style: const TextStyle(
-                            fontSize: 20,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
+                            color: Colors.brown,
                           ),
                         ),
                         const SizedBox(height: 5),

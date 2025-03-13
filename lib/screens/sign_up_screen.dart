@@ -49,7 +49,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     await prefs.setString('email', email);
     await prefs.setString('password', password);
 
-    // ✅ แสดง Alert แจ้งว่าสมัครสำเร็จ
+    //  แสดง Alert แจ้งว่าสมัครสำเร็จ
     _showSuccessDialog();
   }
 
@@ -150,7 +150,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     : const Text(
                         'Register',
                         style: TextStyle(
-                          color: Colors.black87,
+                          color: Colors.brown,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),

@@ -17,10 +17,14 @@ class HealthlogScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Pet Health',
-          style: TextStyle(fontSize: 24), // ปรับขนาดตัวอักษร
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ), // ปรับขนาดตัวอักษร
         ),
         backgroundColor: Colors.yellow,
         foregroundColor: Colors.brown,
+        centerTitle: true,
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(10),

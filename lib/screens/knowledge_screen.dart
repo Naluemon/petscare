@@ -10,27 +10,38 @@ class KnowledgeScreen extends StatelessWidget {
     final List<Map<String, String>> petData = [
       {
         'title': 'Cats',
-        'content':
-            'Cats are small, carnivorous mammals that are often kept as pets. They are known for their agility, curiosity, and independence.',
+        'content': 'Behavior: Cats are independent animals and often do things on their own terms. '
+            'They enjoy personal space and prefer high places like shelves or counters.\n\n'
+            'Care: Regular cleaning of the litter box is important. Grooming helps reduce shedding and prevent hairballs.\n\n'
+            'Diet: Cats are obligate carnivores, their diet should include high-protein foods like chicken or fish.\n\n'
+            'Training: Cats can be trained to follow commands, like using the litter box or performing simple tricks.',
         'image': 'assets/images/cat01.jpg',
       },
       {
         'title': 'Dogs',
-        'content':
-            'Dogs are loyal and intelligent animals that have been domesticated for thousands of years. They are commonly used as companions and working animals.',
+        'content': 'Behavior: Dogs are social and loyal animals that enjoy interacting with their owners. '
+            'They enjoy walks, playtime, and seek attention.\n\n'
+            'Care: Regular grooming and vet check-ups are necessary for maintaining their health.\n\n'
+            'Diet: Dogs are omnivores needing a balanced diet of meat and vegetables.\n\n'
+            'Training: Dogs are highly trainable and can follow various commands.',
         'image': 'assets/images/dog.jpg',
       },
       {
-        'title': 'Fish',
-        'content':
-            'Fish are aquatic creatures that come in various species and sizes. They require proper care, including clean water and a balanced diet.',
-        'image': 'assets/images/fish.jpg',
+        'title': 'Rabbits',
+        'content': 'Behavior: Rabbits are calm and social animals that love digging and nibbling on things.\n\n'
+            'Care: They need space for exercise and a quiet area for resting.\n\n'
+            'Diet: Rabbits are herbivores and need hay, vegetables, and fresh greens in their diet.\n\n'
+            'Training: Rabbits can be trained to use a litter box and perform tricks.',
+        'image': 'assets/images/rabbit.jpg',
       },
       {
-        'title': 'Rabbits',
-        'content':
-            'Rabbits are small, herbivorous mammals that are popular as pets. They require a balanced diet of hay, vegetables, and pellets.',
-        'image': 'assets/images/rabbit.jpg',
+        'title': 'Fish',
+        'content': 'Behavior: Fish vary in species, some swim alone while others live in schools. '
+            'They do not require much attention but need a stable environment.\n\n'
+            'Care: Clean water is crucial for fish health. Regular water changes and monitoring water quality are important.\n\n'
+            'Diet: Fish need different types of food based on their species.\n\n'
+            'Training: Fish can be conditioned to eat from your hand or respond to movements.',
+        'image': 'assets/images/fish.jpg',
       },
     ];
 
@@ -40,7 +51,7 @@ class KnowledgeScreen extends StatelessWidget {
         title: const Text(
           'Knowledge About Pets',
           style: TextStyle(
-            fontSize: 22, // ปรับขนาดฟอนต์
+            fontSize: 24, // ปรับขนาดฟอนต์
             fontWeight: FontWeight.bold,
             color: Colors.brown, // ทำให้ตัวหนา
           ),
@@ -97,15 +108,18 @@ class KnowledgeScreen extends StatelessWidget {
                             Text(
                               pet['title']!,
                               style: const TextStyle(
-                                fontSize: 20,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
+                                color: Colors.brown,
                               ),
                             ),
                             const SizedBox(height: 5),
+                            // Use maxLines and ellipsis for overflow handling
                             Text(
                               pet['content']!,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2, // Limit the text to 2 lines
+                              overflow: TextOverflow
+                                  .ellipsis, // Show ellipsis if it's too long
                               style: const TextStyle(fontSize: 16),
                             ),
                           ],

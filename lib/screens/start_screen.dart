@@ -19,30 +19,44 @@ class StartScreen extends StatelessWidget {
               width: 350, // ขนาดความกว้างของภาพ
               height: 450, // ขนาดความสูงของภาพ
             ),
-            const SizedBox(height: 20), // ระยะห่างระหว่างภาพและข้อความ
+            const SizedBox(height: 0.5), // ระยะห่างระหว่างภาพและข้อความ
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
                 Text(
                   'Pets',
                   style: TextStyle(
-                    fontSize: 40,
-                    color: Color.fromARGB(255, 119, 64, 0),
+                    fontSize: 35,
+                    color: Colors.brown,
                     fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(
+                        offset: Offset(2, 2), // การเลื่อนขอบ
+                        blurRadius: 0, // ไม่มีการเบลอ
+                        color: Colors.white, // ขอบขาวทึบ
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(width: 10), // ระยะห่างระหว่างคำ
                 Text(
                   'Care',
                   style: TextStyle(
-                    fontSize: 40,
-                    color: Color.fromARGB(255, 119, 64, 0),
+                    fontSize: 35,
+                    color: Colors.brown,
                     fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(
+                        offset: Offset(2, 2), // การเลื่อนขอบ
+                        blurRadius: 0, // ไม่มีการเบลอ
+                        color: Colors.white, // ขอบขาวทึบ
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 20), // ระยะห่างระหว่างข้อความและปุ่ม
+            const SizedBox(height: 18), // ระยะห่างระหว่างข้อความและปุ่ม
             ElevatedButton(
               onPressed: () {
                 // เมื่อกดปุ่มจะพาไปที่หน้า Login
@@ -52,16 +66,21 @@ class StartScreen extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    const Color.fromARGB(255, 255, 255, 255), // สีปุ่ม
+                backgroundColor: Colors.white, // สีปุ่ม
                 padding:
                     const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
                 textStyle: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: Colors.brown,
                 ),
               ),
-              child: const Text('Start'),
+              child: const Text(
+                'Start',
+                style: TextStyle(
+                  color: Colors.brown,
+                ),
+              ),
             ),
           ],
         ),

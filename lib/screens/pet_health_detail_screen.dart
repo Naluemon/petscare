@@ -62,8 +62,16 @@ class _PetHealthDetailScreenState extends State<PetHealthDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Health: ${widget.petName}'),
+        title: Text(
+          'Health: ${widget.petName}',
+          style: TextStyle(
+            color: Colors.brown,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: Colors.yellow,
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -89,7 +97,12 @@ class _PetHealthDetailScreenState extends State<PetHealthDetailScreen> {
                   backgroundColor: Colors.yellow,
                   padding: const EdgeInsets.all(15)),
               onPressed: _saveHealthRecord,
-              child: const Text('Save Record', style: TextStyle(fontSize: 18)),
+              child: const Text('Save Record',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.brown,
+                  )),
             ),
             const SizedBox(height: 20),
             Expanded(

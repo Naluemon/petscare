@@ -1,4 +1,5 @@
 // screens/pet_info_screen.dart
+
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -48,62 +49,130 @@ class _PetInfoScreenState extends State<PetInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Pet Info')),
+      appBar: AppBar(
+        title: const Text(
+          'Pet Info',
+          style: TextStyle(
+              color: Colors.brown, fontSize: 22, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextField(
                 controller: nameController,
-                decoration: const InputDecoration(hintText: 'Name')),
-            TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Name',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextField(
                 controller: speciesController,
-                decoration: const InputDecoration(hintText: 'Species')),
-            TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Species',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextField(
                 controller: weightController,
-                decoration: const InputDecoration(hintText: 'Weight'),
-                keyboardType: TextInputType.number),
-            DropdownButton<String>(
-              value: selectedSex,
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedSex = newValue!;
-                });
-              },
-              items: ['Male', 'Female', 'Unknown'].map((String value) {
-                return DropdownMenuItem<String>(
-                    value: value, child: Text(value));
-              }).toList(),
-            ),
-            DropdownButton<String>(
-              value: selectedAge,
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedAge = newValue!;
-                });
-              },
-              items: [
-                'Less than 1 year',
-                '1 year',
-                '2 years',
-                '3 year',
-                '4 years',
-                '5 year',
-                '6 years',
-                'Over 7 years'
-              ].map((String value) {
-                return DropdownMenuItem<String>(
-                    value: value, child: Text(value));
-              }).toList(),
-            ),
-            photoBytes == null
-                ? ElevatedButton(
-                    onPressed: _pickImage, child: const Text('Pick a photo'))
-                : Image.memory(photoBytes!,
-                    width: 100, height: 100, fit: BoxFit.cover),
-            ElevatedButton(onPressed: savePetInfo, child: const Text('Save')),
-          ],
+                decoration: const InputDecoration(
+                  labelText: 'Weight',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(height: 10),
+              DropdownButtonFormField<String>(
+                value: selectedSex,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedSex = newValue!;
+                  });
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Sex',
+                  border: OutlineInputBorder(),
+                ),
+                items: ['Male', 'Female', 'Unknown']
+                    .map((String value) => DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        ))
+                    .toList(),
+              ),
+              const SizedBox(height: 10),
+              DropdownButtonFormField<String>(
+                value: selectedAge,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedAge = newValue!;
+                  });
+                },
+                decoration: const InputDecoration(
+                  labelText: 'Age',
+                  border: OutlineInputBorder(),
+                ),
+                items: [
+                  'Less than 1 year',
+                  '1 year',
+                  '2 years',
+                  '3 years',
+                  '4 years',
+                  '5 years',
+                  '6 years',
+                  'Over 7 years'
+                ]
+                    .map((String value) => DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        ))
+                    .toList(),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: 'Upload Photo',
+                  border: OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.upload_file),
+                    onPressed: _pickImage,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              if (photoBytes != null)
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.memory(
+                    photoBytes!,
+                    width: double.infinity,
+                    height: 150,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: savePetInfo,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.yellow,
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                ),
+                child: const Text('Save',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.brown,
+                      fontWeight: FontWeight.bold,
+                    )),
+              ),
+            ],
+          ),
         ),
       ),
     );

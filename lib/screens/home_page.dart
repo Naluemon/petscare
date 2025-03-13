@@ -53,12 +53,12 @@ class _HomePageState extends State<HomePage> {
         Container(
           width: double.infinity,
           color: Colors.yellow,
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 13),
           alignment: Alignment.center,
           child: const Text(
             'Pets',
             style: TextStyle(
-                fontSize: 22, fontWeight: FontWeight.bold, color: Colors.brown),
+                fontSize: 24, fontWeight: FontWeight.bold, color: Colors.brown),
           ),
         ),
         Expanded(
@@ -90,10 +90,18 @@ class _HomePageState extends State<HomePage> {
                               child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(12),
-                                  image: DecorationImage(
-                                    image: AssetImage(pets[index]['image']),
-                                    fit: BoxFit.cover, // ✅ ปรับให้ภาพเต็มกรอบ
-                                  ),
+                                  image: pets[index]['photoBytes'] != null
+                                      ? DecorationImage(
+                                          image: MemoryImage(
+                                              pets[index]['photoBytes']),
+                                          fit: BoxFit
+                                              .cover, // ปรับให้ภาพเต็มกรอบ
+                                        )
+                                      : DecorationImage(
+                                          image:
+                                              AssetImage(pets[index]['image']),
+                                          fit: BoxFit.cover,
+                                        ),
                                 ),
                               ),
                             ),
@@ -101,7 +109,7 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               pets[index]['name'],
                               style: const TextStyle(
-                                  fontSize: 18,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.brown),
                               textAlign: TextAlign.center,
@@ -130,12 +138,17 @@ class _HomePageState extends State<HomePage> {
 
               if (newPet != null && mounted) {
                 setState(() {
+                  // เพิ่มข้อมูลสัตว์เลี้ยงที่ได้จาก PetInfoScreen
                   pets.add(newPet);
                 });
               }
             },
             child: const Text('Add more pet',
-                style: TextStyle(fontSize: 16, color: Colors.white)),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                )),
           ),
         ),
       ],

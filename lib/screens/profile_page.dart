@@ -167,7 +167,11 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile',
-            style: TextStyle(color: Colors.brown, fontWeight: FontWeight.bold)),
+            style: TextStyle(
+              color: Colors.brown,
+              fontWeight: FontWeight.bold,
+              fontSize: 24,
+            )),
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
@@ -294,7 +298,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Edit Profile button
+                  // ปุ่มเเก้ไขข้อมูล
                   SizedBox(
                     width: double.infinity,
                     height: 50,
@@ -308,7 +312,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                       child: const Text('Edit Profile',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold)),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -327,7 +332,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                       child: const Text('Log out',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ],

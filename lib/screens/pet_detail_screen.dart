@@ -18,8 +18,16 @@ class PetDetailScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(title),
+        title: Text(
+          title,
+          style: TextStyle(
+            color: Colors.brown,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: Colors.yellow,
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Column(
