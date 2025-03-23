@@ -1,0 +1,2 @@
+C:/zip pets/petscare/android/app/.cxx/Debug/394y5q5e/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/zip pets/petscare/android/app/.cxx/Debug/394y5q5e/armeabi-v7a/CMakeFiles/rebuild_cache.dir

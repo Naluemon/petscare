@@ -1,0 +1,2 @@
+C:/zip pets/petscare/android/app/.cxx/RelWithDebInfo/1i6d4q1h/x86/CMakeFiles/edit_cache.dir
+C:/zip pets/petscare/android/app/.cxx/RelWithDebInfo/1i6d4q1h/x86/CMakeFiles/rebuild_cache.dir

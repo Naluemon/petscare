@@ -4,7 +4,9 @@ import 'package:petscare/screens/bookservice_page.dart';
 import 'package:petscare/screens/healthlog_screen.dart';
 import 'package:petscare/screens/home_screen.dart';
 import 'package:petscare/screens/knowledge_screen.dart';
+import 'package:petscare/screens/login_screen.dart';
 import 'package:petscare/screens/profile_page.dart';
+import 'package:petscare/screens/start_screen.dart';
 import 'package:petscare/widgets/bottom_nav_bar.dart';
 
 void main() {
